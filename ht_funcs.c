@@ -161,6 +161,18 @@ Node *build_tree(Node *head){
     /*insert_sorted(head, prev);*/
 }
 
+Node *build_tree(Node *head){
+    Node *first = NULL, *second = NULL, *new = NULL;
+    if (head == NULL) {
+        return head;
+    }
+    first = head;
+    second = head->next;
+    while (first != NULL && second != NULL) {
+
+    }
+}
+
 void free_tree(Node *root){
 
     if(root == NULL){
