@@ -2,30 +2,51 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-/*
-void insert_sorted(Node *head, Node *new){
 
-    Node *prev = head;
+Node *insert_sorted(Node *head, Node *cur){
+
+/*    Node *prev = head;
     Node *cur = NULL;
 
     if(prev == NULL){
         head = new;
+        return;
     }
-    while(prev != NULL){
-        while(prev->next != NULL){
-            cur = prev->next;
-            if((new->frequency < cur->frequency) || 
-               (new->frequency==cur->frequency && 
-                new->letter < cur->letter)){
-                new->next = cur;
-                prev->next = new;
-                return;
-            }
+    while(prev->next != NULL){
+        cur = prev->next;
+        if((new->frequency < cur->frequency) || 
+           (new->frequency==cur->frequency && new->letter < cur->letter)){
+            prev->next = new;
+            new->next = cur;
+            return;
+        }
+        if(cur->next == NULL){
+            cur->next = new;
         }
         prev = prev->next;
     }
+}*/
+
+    Node *prev, *next;
+    if(head == NULL){
+        free(head);
+        cur->next = NULL;
+        return cur;
+    }
+    prev = head;
+    next = head->next;
+    while((next != NULL && cur->frequency > next->frequency) || 
+         (next != NULL && (cur->frequency == next->frequency) && (cur->letter > next->letter))){
+        prev = prev->next;
+        next = next->next;
+    }
+    prev->next = cur;
+    cur->next = next;
+    return head;
 }
 
+
+/*
     int pos = 0;
     Node *temp = head;
     while(temp != NULL){
@@ -54,8 +75,8 @@ Node *add_at_pos(Node *head, Node *new, int pos){
     new->next = iterate->next;
     iterate->next = new;
     return head;
-}*/
-Node insert_head(Node *head, Node *new){
+}
+Node *insert_head(Node *head, Node *new){
     new->next = head;
     return new;
 }
@@ -73,42 +94,55 @@ int comp(Node *a, Node *b){
     } 
     else{ return 1;}
 }
-
+*/
 Node *build_linked(int arr[]){
-    Node *head = (Node *)malloc(sizeof(Node));
-    Node *new = (Node *)malloc(sizeof(Node));
+    Node *new;
     int i;
+    Node *head = NULL;;
 
-    head->letter = -1;
+    for (i = 0; i < 256; i++) {
+        if (arr[i] > 0) {
+            new = (Node *)malloc(sizeof(Node));
+            new->letter = i;
+            new->frequency = arr[i];
+            head = insert_sorted(head, new);
+        }
+    }
 
+/*
     for(i = 0; i < 256; i++){
         if(arr[i] != 0){
-            if(head->letter < 0 || head->letter>255){
+            if(head->letter < 0){
                 head->letter = i;
                 head->frequency = arr[i];
+                head->next = NULL;
             }
             else{
                 new->letter = i;
                 new->frequency = arr[i];
-                insert_sorted(head, new);
+                new->next = NULL;
+                head = insert_sorted(head, new);
             }
-        }
-    }
+       }
+    }*/
     return head;
 }
 
-void build_tree(Node *head){
+/*Node *build_tree(Node *head){
     Node *prev = head;
     Node *cur = NULL;
-    Node *new = (Node *)malloc(sizeof(Node));
+    Node *new;
 
     if(prev == NULL){
-        return;
+        return head;
     }
+    cur = prev->next;
+    printf("head letter: %c with frequency %d\n", prev->letter, prev->frequency);
+    printf("next letter: %c with frequency %d\n", cur->letter, cur->frequency);
     while(prev != NULL && prev->next != NULL){
-printf("prev %d\n", prev->letter);
         cur = prev->next;
-/*?*/
+
+        new = (Node *)malloc(sizeof(Node));
         new->left = (Node *)malloc(sizeof(Node));
         new->right = (Node *)malloc(sizeof(Node));
 
@@ -120,10 +154,42 @@ printf("prev %d\n", prev->letter);
         new->frequency = prev->frequency + cur->frequency;
         new->letter = -1;
         head = cur->next;
-        insert_sorted(head, new);
+        head = insert_sorted(head, new);
         prev = head;
     }
-    /*insert_sorted(head, prev);*/
+    return head;
+    insert_sorted(head, prev);
+}*/
+
+Node *build_tree(Node *head){
+    Node *first = NULL, *second = NULL, *new = NULL;
+    if (head == NULL) {
+        return head;
+    }
+    first = head;
+    second = head->next;
+    do {
+        first = (Node *)malloc(sizeof(Node));
+        second = (Node *)malloc(sizeof(Node));
+        if (head != NULL) {
+            first->letter = head->letter;
+            first->frequency = head->frequency;
+        }
+        if (head->next != NULL) {
+            second->letter = head->next->letter;
+            second->frequency = head->next->frequency;
+        }
+        new = (Node *)malloc(sizeof(Node));
+        new->letter = -1;
+        new->frequency = first->frequency + second->frequency;
+        new->left = first;
+        new->right = second;
+        head = insert_sorted(head, new);
+        if(head->next->next != NULL){
+            head = head->next->next;
+        }
+    } while (head->next != NULL);
+    return head;
 }
 
 void free_tree(Node *root){
@@ -160,7 +226,6 @@ void encode(char *arr[], Node *root, char *code){
 printf("letter %d\n", root->letter);
         arr[root->letter] = realloc(arr[root->letter], sizeof(char) * strlen(code)+1);
         strcpy(arr[root->letter], code);
-        /*return?*/
     }
     if(root != NULL && root->left != NULL){
     encode(arr, root->left, left_path);}
@@ -169,5 +234,6 @@ printf("letter %d\n", root->letter);
 
     free(left_path);
     free(right_path);
+
 }
 

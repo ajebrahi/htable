@@ -37,3 +37,5 @@ Node *build_tree(Node *head);
 void encode(char *arr[], Node *root, char *code);
 void free_tree(Node *root);
 Node *add_at_pos(Node *head, Node *new, int pos);
+void print_tree(Node *head);
+void elements_in_list(Node *head);

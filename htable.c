@@ -12,29 +12,27 @@ int main(int argvc, char *argv[]){
     Node *head = NULL;
     file = fopen(argv[1], "r");
 
+    if(file == NULL){
+        printf("usage\n");
+        return 0;
+    }
+
     while((c = getc(file)) != EOF){
-        printf("The character is %c\n", c);
         freq[c]++;
     }
 
     head = build_linked(freq);
-    /*while (cur != NULL && count < 5) {
-        printf("Letter: %c\nFreqeuncy: %d\n", cur->letter, cur->frequency);
-        cur = cur->next;
-        count++;
-    }*/
     head = build_tree(head);
 
     for(i = 0; i < 256; i++){
         codes[i] = (char *)malloc(sizeof(char));
-        codes[i][0] = '-';
+        strcpy(codes[i], "-");
     }
-
-    encode(codes, head, "");
+    encode(codes, head, (char *)malloc(sizeof(char)));
 
     for(i = 0; i < 256; i++){
         if(codes[i][0] != '-'){
-            printf("0x%x: %s\n", i, codes[i]);
+            printf("0x%02x: %s\n", i, codes[i]);
         }
     }
     free_tree(head);
