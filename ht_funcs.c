@@ -128,7 +128,7 @@ Node *build_linked(int arr[]){
     return head;
 }
 
-Node *build_tree(Node *head){
+/*Node *build_tree(Node *head){
     Node *prev = head;
     Node *cur = NULL;
     Node *new;
@@ -140,8 +140,8 @@ Node *build_tree(Node *head){
     printf("head letter: %c with frequency %d\n", prev->letter, prev->frequency);
     printf("next letter: %c with frequency %d\n", cur->letter, cur->frequency);
     while(prev != NULL && prev->next != NULL){
-        /*cur = prev->next;*/
-/*?*/
+        cur = prev->next;
+
         new = (Node *)malloc(sizeof(Node));
         new->left = (Node *)malloc(sizeof(Node));
         new->right = (Node *)malloc(sizeof(Node));
@@ -158,8 +158,8 @@ Node *build_tree(Node *head){
         prev = head;
     }
     return head;
-    /*insert_sorted(head, prev);*/
-}
+    insert_sorted(head, prev);
+}*/
 
 Node *build_tree(Node *head){
     Node *first = NULL, *second = NULL, *new = NULL;
@@ -168,9 +168,19 @@ Node *build_tree(Node *head){
     }
     first = head;
     second = head->next;
-    while (first != NULL && second != NULL) {
+    do {
+        first = (Node *)malloc(sizeof(Node));
+        second = (Node *)malloc(sizeof(Node));
+        if (head != NULL) {
+            first->letter = head->letter;
+            first->frequency = head->frequency;
+        }
+        if (head->next != NULL) {
+            second->letter = head->next->letter;
+            second->frequency = head->next->frequency;
+        }
 
-    }
+    } while (head->next != NULL);
 }
 
 void free_tree(Node *root){
