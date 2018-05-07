@@ -163,12 +163,13 @@ Node *build_linked(int arr[]){
 
 Node *build_tree(Node *head){
     Node *first = NULL, *second = NULL, *new = NULL;
+    Node *tmp;
     if (head == NULL) {
         return head;
     }
     first = head;
     second = head->next;
-    do {
+    while (head->next != NULL) {
         first = (Node *)malloc(sizeof(Node));
         second = (Node *)malloc(sizeof(Node));
         if (head != NULL) {
@@ -179,8 +180,20 @@ Node *build_tree(Node *head){
             second->letter = head->next->letter;
             second->frequency = head->next->frequency;
         }
-
-    } while (head->next != NULL);
+        new = (Node *)malloc(sizeof(Node));
+        new->frequency = first->frequency + second->frequency;
+        new->letter = ((first->letter < second->letter) ? first->letter : second->letter);
+        new->left = first;
+        new->right = second;
+        tmp = head;
+        head = head->next;
+        free(tmp);
+        tmp = head;
+        head = head->next;
+        free(tmp);
+        head = insert_sorted(head, new);
+    }
+    return head;
 }
 
 void free_tree(Node *root){
