@@ -29,13 +29,15 @@ Node *insert_sorted(Node *head, Node *cur){
 
     Node *prev, *next;
     if(head == NULL){
+        free(head);
+        cur->next = NULL;
         return cur;
     }
     prev = head;
-    next = prev->next;
+    next = head->next;
     while((next != NULL && cur->frequency > next->frequency) || 
-         (next != NULL && (cur->frequency == next->frequency) &&(cur->letter > next->letter))){
-        prev = next;
+         (next != NULL && (cur->frequency == next->frequency) && (cur->letter > next->letter))){
+        prev = prev->next;
         next = next->next;
     }
     prev->next = cur;
@@ -94,15 +96,23 @@ int comp(Node *a, Node *b){
 }
 */
 Node *build_linked(int arr[]){
-    Node *head = (Node *)malloc(sizeof(Node));
-    Node *new = (Node *)malloc(sizeof(Node));
+    Node *new;
     int i;
+    Node *head = NULL;;
 
-    head->letter = -1;
+    for (i = 0; i < 256; i++) {
+        if (arr[i] > 0) {
+            new = (Node *)malloc(sizeof(Node));
+            new->letter = i;
+            new->frequency = arr[i];
+            head = insert_sorted(head, new);
+        }
+    }
 
+/*
     for(i = 0; i < 256; i++){
         if(arr[i] != 0){
-            if(head->letter < 0 || head->letter>255){
+            if(head->letter < 0){
                 head->letter = i;
                 head->frequency = arr[i];
                 head->next = NULL;
@@ -114,22 +124,25 @@ Node *build_linked(int arr[]){
                 head = insert_sorted(head, new);
             }
         }
-    }
+    }*/
     return head;
 }
 
 Node *build_tree(Node *head){
     Node *prev = head;
     Node *cur = NULL;
-    Node *new = (Node *)malloc(sizeof(Node));
+    Node *new;
 
     if(prev == NULL){
         return head;
     }
+    cur = prev->next;
+    printf("head letter: %c with frequency %d\n", prev->letter, prev->frequency);
+    printf("next letter: %c with frequency %d\n", cur->letter, cur->frequency);
     while(prev != NULL && prev->next != NULL){
-printf("prev %d\n", prev->letter);
-        cur = prev->next;
+        /*cur = prev->next;*/
 /*?*/
+        new = (Node *)malloc(sizeof(Node));
         new->left = (Node *)malloc(sizeof(Node));
         new->right = (Node *)malloc(sizeof(Node));
 

@@ -5,23 +5,24 @@
 int main(int argvc, char *argv[]){
 
     FILE *file = NULL;
-    char c;
-    int freq[256];
+    int c;
+    int freq[256] = {0};
     char *codes[256];
     int i;
     Node *head = NULL;
-
     file = fopen(argv[1], "r");
 
-    for(i = 0; i < 256; i++){
-        freq[i] = 0;
-    }
-
     while((c = getc(file)) != EOF){
-        freq[(unsigned)c]++;
+        printf("The character is %c\n", c);
+        freq[c]++;
     }
 
     head = build_linked(freq);
+    /*while (cur != NULL && count < 5) {
+        printf("Letter: %c\nFreqeuncy: %d\n", cur->letter, cur->frequency);
+        cur = cur->next;
+        count++;
+    }*/
     head = build_tree(head);
 
     for(i = 0; i < 256; i++){
