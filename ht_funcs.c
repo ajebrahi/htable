@@ -34,6 +34,8 @@ Node *build_linked(int arr[]){
             new = (Node *)malloc(sizeof(Node));
             new->letter = i;
             new->frequency = arr[i];
+            new->left = NULL;
+            new->right = NULL;
             head = insert_sorted(head, new);
         }
     }
@@ -102,16 +104,15 @@ void encode(char *arr[], Node *root, char *code){
     if(root == NULL){ 
         return;
     }
-    left_path = (char *)malloc(sizeof(char)*strlen(code)+1);
-    right_path = (char *)malloc(sizeof(char)*strlen(code)+1);
+    left_path = (char *)malloc(sizeof(char)*strlen(code)+2);
+    right_path = (char *)malloc(sizeof(char)*strlen(code)+2);
     strcpy(left_path, code);
     strcat(left_path, "0");
     strcpy(right_path, code);
     strcat(right_path, "1");
 
     if(root->left == NULL && root->right == NULL){
-        arr[root->letter] = realloc(arr[root->letter], 
-            sizeof(char) * strlen(code)+1);
+        arr[root->letter] = realloc(arr[root->letter],sizeof(char) * strlen(code)*2);
         strcpy(arr[root->letter], code);
     }
     if(root->left != NULL){
@@ -123,16 +124,3 @@ void encode(char *arr[], Node *root, char *code){
     free(right_path);
 }
 
-/*void print_tree(Node *root){
-
-    if(root == NULL){
-        return;
-    }
-    if(root->left != NULL){
-        print_tree(root->left);
-    }
-    printf("root: %d\n", root->letter);
-    if(root->right != NULL){
-        print_tree(root->right);
-    }
-}*/
